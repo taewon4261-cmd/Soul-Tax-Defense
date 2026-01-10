@@ -8,6 +8,7 @@ public class Tile : MonoBehaviour
     private SpriteRenderer rend;
 
     public bool isOccupied;
+    private UnitBase curUnit;
 
     private void Start()
     {
@@ -38,6 +39,19 @@ public class Tile : MonoBehaviour
         }
         GameManager.Instance.OnTileClicked(this);
         rend.color = originalColor;
+    }
+
+    public void SetUnit(UnitBase unit)
+    {
+        isOccupied = true;
+        curUnit = unit;
+    }
+
+    public void ClearUnit()
+    {
+        isOccupied = false;
+        curUnit = null;
+        Debug.Log("유닛이 죽어서 타일이 비었습니다");
     }
 
 }

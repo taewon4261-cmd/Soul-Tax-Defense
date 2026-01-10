@@ -4,9 +4,9 @@ using UnityEngine;
 
 public interface IState
 {
-    public void Enter();
+    public void Enter(GameManager gm);
 
-    public void Execute();
+    public void Execute(GameManager gm);
 
-    public void Exit();
+    public void Exit(GameManager gm);
 }

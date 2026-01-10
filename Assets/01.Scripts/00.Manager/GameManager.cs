@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public GameObject curUnitPrefab;
     public int curUnitCost;
 
+    public bool isBattleActive;
+
     private void Awake()
     {
         if (Instance == null)
@@ -25,19 +27,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ChangeState(IState newstate)
+    public void ChangeState(IState newState)
     {
-        if (currentState != null)
-        {
-            currentState.Exit();
-        }
-
-        currentState = newstate;
-
-        if (currentState != null)
-        {
-            currentState.Enter();
-        }
+        if (currentState != null) currentState.Exit(this);
+        currentState = newState;
+        currentState.Enter(this);
     }
 
     private void Start()
@@ -49,7 +43,7 @@ public class GameManager : MonoBehaviour
     {
         if (currentState != null)
         {
-            currentState.Execute();
+            currentState.Execute(this);
         }
     }
     public void AddGold(int amount)
@@ -80,8 +74,23 @@ public class GameManager : MonoBehaviour
         Debug.Log($"선택됨: {prefab.name}, 가격: {cost}");
         Debug.Log("이제 타일을 클릭하면 설치됩니다.");
     }
+
+    // 버튼 클릭 이벤트용 함수 (UI 버튼에 연결하세요)
+    public void OnClickStartBattle()
+    {
+        // 낮일 때만 밤으로 넘어갈 수 있음
+        if (!isBattleActive)
+        {
+            ChangeState(new NightState());
+        }
+    }
     public void OnTileClicked(Tile tile)
     {
+        if (isBattleActive)
+        {
+            Debug.Log("전투 중에는 유닛을 배치할 수 없습니다!");
+            return;
+        }
         if (curUnitPrefab == null)
         {
             Debug.Log("설치할 유닛을 먼저 선택하세요");

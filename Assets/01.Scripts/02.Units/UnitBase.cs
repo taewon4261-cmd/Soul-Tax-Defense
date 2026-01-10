@@ -20,6 +20,8 @@ public class UnitBase : MonoBehaviour
 
     protected float attackCool;
 
+    private Tile ownerTile;
+
 
     public void TakeDamage(int dmg)
     {
@@ -33,8 +35,22 @@ public class UnitBase : MonoBehaviour
 
     void Die()
     {
+        if (ownerTile != null)
+        {
+            ownerTile.ClearUnit();
+        }
+
         Destroy(gameObject);
         
+    }
+
+    public void Setup(Tile tile)
+    {
+        this.ownerTile = tile;
+        if (ownerTile != null)
+        {
+            ownerTile.SetUnit(this);
+        }
     }
 
 
