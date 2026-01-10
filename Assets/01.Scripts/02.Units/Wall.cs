@@ -5,24 +5,14 @@ using UnityEngine.SceneManagement;
 
 public class Wall : MonoBehaviour
 {
-    public static Wall instance;
-
-    public int hp;
-
     public void TakeDamage(int dmg)
     {
-        hp -= dmg;
-        Debug.Log($"성벽 남은 체력 : {hp}");
-        Die();
-    }
-
-    void Die()
-    {
-        if (hp <= 0)
+        if (GameManager.Instance != null)
         {
-            Destroy(gameObject);
-            SceneManager.LoadScene("ResultScene");
-            Debug.Log("성벽이 무너졌습니다 패배씬으로 이동합니다");
+            GameManager.Instance.DecreaseLife(dmg);
         }
+        // 시각적 효과 (선택 사항)
+        // 예: 성벽이 빨갛게 깜빡거리거나 흔들리는 연출은 여기서 함
+        Debug.Log("성벽 피격! 본체 Life 차감 요청함.");
     }
 }

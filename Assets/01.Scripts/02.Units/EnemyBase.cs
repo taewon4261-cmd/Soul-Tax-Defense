@@ -5,7 +5,6 @@ public class EnemyBase : MonoBehaviour
 {
     public EnemyDataSO data;
     public float speed;
-    public float attackRange = 0.4f;
 
     [SerializeField] private int hp;
 
@@ -17,7 +16,7 @@ public class EnemyBase : MonoBehaviour
 
     private void Awake()
     {
-        hp = data.maxHp;
+       if(data != null) hp = data.maxHp;
         speed = Random.Range(0.5f, 1.5f);
     }
 
@@ -27,16 +26,20 @@ public class EnemyBase : MonoBehaviour
         hp -= dmg;
         if (hp <= 0)
         {
-            Die();
+            Die(true);
         }
     }
-    void Die()
+    void Die(bool giveReward)
     {
         if (WaveManager.Instance != null)
         {
             WaveManager.Instance.OnEnemyKilled();
         }
-        GameManager.Instance.AddGold(data.goldReward);
+
+        if (giveReward && GameManager.Instance != null)
+        {
+            GameManager.Instance.AddGold(data.goldReward);
+        }
         Destroy(gameObject);
     }
             
@@ -61,7 +64,7 @@ public class EnemyBase : MonoBehaviour
     {
         float range = 0.5f;
 
-        // 디버그 선 그리기
+       
         Debug.DrawRay(transform.position, Vector2.left * range, Color.red);
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.left, range, unitLayer);
@@ -95,23 +98,9 @@ public class EnemyBase : MonoBehaviour
         if (wall != null)
         {
             wall.TakeDamage(data.atk);
-            Destroy(gameObject);   
         }
+        Die(false);
        
-    }
-
-    private void OnMouseDown()
-    {
-        EnemyBase enemy = GetComponent<EnemyBase>();
-        if (enemy == null)
-        {
-            return;
-        }
-        if (enemy != null)
-        {
-            hp -= 1;
-        }
-
     }
 }
 

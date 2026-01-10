@@ -10,20 +10,25 @@ public class Slime : UnitBase
 
     void IncomeUp()
     {
+        if (GameManager.Instance == null || !GameManager.Instance.isBattleActive)
+        {
+            return;
+        }
+
         timer += Time.deltaTime;
         if (timer > incomeTime)
         {
-            GameManager.Instance.gold += income;
-            Debug.Log("°ñµå È¹µæ");
-
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.AddGold(income);
+            }
             timer = 0;
-            
         }
     }
 
     protected override void Update()
     {
-
+        base.Update();
         IncomeUp();
     }
 }

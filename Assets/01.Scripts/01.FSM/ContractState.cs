@@ -7,6 +7,8 @@ public class ContractState : IState
     {
         Debug.Log(" [계약 단계] 악마와의 계약을 선택하세요.");
 
+        Time.timeScale = 0f;
+
         // 매니저에게 "카드 보여줘" 요청
         if (ContractManager.Instance != null)
         {
@@ -23,6 +25,7 @@ public class ContractState : IState
 
     public void Exit(GameManager gm)
     {
+        Time.timeScale = 1f;
         // UI 끄기
         // UIManager.Instance.ShowContractPopup(false);
     }

@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Antlr3.Runtime.Tree;
 using UnityEngine;
-using System;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,7 +12,8 @@ public class GameManager : MonoBehaviour
     [Header("Game Data")]
     public int day = 1;        // 현재 날짜
     public int gold = 100;     // 현재 골드
-    public int life = 5;       // 플레이어 생명
+    public int life = 1000;       // 플레이어 생명
+    public int maxLife = 1000;
     public int currentTax = 50;// 다음 날 낼 세금
 
     public event Action OnResourceChange;
@@ -44,6 +46,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        life = maxLife;
+
         ChangeState(new DayState());
         OnResourceChange?.Invoke();
     }
@@ -97,11 +101,18 @@ public class GameManager : MonoBehaviour
 
         OnResourceChange?.Invoke(); // 체력 바뀌었으니 UI 갱신
 
+        Debug.Log($"체력 감소: -{amount}, 남은 Life: {life}");
+
         if (life <= 0)
         {
             Debug.Log(" 게임 오버!");
-            // ChangeState(new GameOverState()); // 나중에 추가
+            GameOver();
         }
+    }
+    public void GameOver()
+    {
+        Debug.Log(" 게임 오버! (세금 미납 또는 성벽 파괴)");
+        SceneManager.LoadScene("ResultScene");
     }
     public void SelectUnit(GameObject prefab, int cost)
     {
