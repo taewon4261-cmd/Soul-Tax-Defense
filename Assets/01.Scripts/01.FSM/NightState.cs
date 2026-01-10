@@ -27,8 +27,8 @@ public class NightState : IState
     {
         if (WaveManager.Instance != null && WaveManager.Instance.IsWaveFinished())
         {
-            // 웨이브가 끝났다면 다시 낮으로 전환 (혹은 결과/세금 단계로)
-            gm.ChangeState(new DayState());
+            
+            gm.ChangeState(new ContractState());
         }
     }
 

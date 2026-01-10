@@ -32,7 +32,10 @@ public class EnemyBase : MonoBehaviour
     }
     void Die()
     {
-        Debug.Log("Àû »ç¸Á");
+        if (WaveManager.Instance != null)
+        {
+            WaveManager.Instance.OnEnemyKilled();
+        }
         GameManager.Instance.AddGold(data.goldReward);
         Destroy(gameObject);
     }
