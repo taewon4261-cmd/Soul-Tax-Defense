@@ -93,15 +93,21 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        TryUseGold(curUnitCost);
+        if (!TryUseGold(curUnitCost)) return;
 
-        Instantiate(curUnitPrefab, tile.transform.position, Quaternion.identity);
+        GameObject unitObj = Instantiate(curUnitPrefab, tile.transform.position, Quaternion.identity);
 
-        tile.isOccupied = true;
+        UnitBase unit = unitObj.GetComponent<UnitBase>();
+        if (unit != null)
+        {
+            unit.Setup(tile);
+        }
+        else
+        {
+            Debug.Log("생성된 프리팹에 UnitBase 스크립특라 없습니다");
+        }
         Debug.Log("유닛 배치 완료");
-
         curUnitPrefab = null;
-
     }
 
    

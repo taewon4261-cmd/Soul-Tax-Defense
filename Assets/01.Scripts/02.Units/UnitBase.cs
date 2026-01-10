@@ -21,7 +21,6 @@ public class UnitBase : MonoBehaviour
     protected float attackCool;
 
 
-
     public void TakeDamage(int dmg)
     {
         hp -= dmg;
@@ -35,6 +34,7 @@ public class UnitBase : MonoBehaviour
     void Die()
     {
         Destroy(gameObject);
+        
     }
 
 
