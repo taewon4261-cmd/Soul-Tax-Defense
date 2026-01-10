@@ -9,8 +9,10 @@ public class DayState : IState
         Debug.Log("낮 상태 진입! 유닛 배치시작");
 
         gm.isBattleActive = false;
-
-        UIManager.Instance.ShowStartButton();
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.ShowStartButton(true);
+        }
 
 
     }
