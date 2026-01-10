@@ -56,7 +56,7 @@ public class EnemyBase : MonoBehaviour
 
     void DetectAndAttackUnit()
     {
-        float range = 0.7f;
+        float range = 0.5f;
 
         // 디버그 선 그리기
         Debug.DrawRay(transform.position, Vector2.left * range, Color.red);
