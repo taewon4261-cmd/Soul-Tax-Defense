@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Tile : MonoBehaviour
 {
@@ -32,12 +33,19 @@ public class Tile : MonoBehaviour
 
     private void OnMouseDown()
     {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            return;
+        }
         if (isOccupied)
         {
             Debug.Log("이미 유닛이 있습니다");
             return;
         }
-        GameManager.Instance.OnTileClicked(this);
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnTileClicked(this);
+        }
         rend.color = originalColor;
     }
 
