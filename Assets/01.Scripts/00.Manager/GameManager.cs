@@ -6,6 +6,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [Header("PausePanel")]
+    public GameObject pausePanel;
+
+    [Header("UI References")]
+    public DayResultUI dayResultUI;
+
     [Header("Global Buffs (계약 효과)")]
     public float skeletonAtkMult = 1f;
     public float skeletonHpMult = 1f;
@@ -25,6 +31,11 @@ public class GameManager : MonoBehaviour
     public int maxLife = 1000;
     public int currentTax = 50;
 
+    [Header("Tax Settings")]
+    public int baseTax = 50;        // 1일차 기본 세금
+    public int taxIncreaseAmount = 30; // 하루마다 오르는 고정 세금
+    public float taxGrowthRate = 1.2f; // 하루마다 10%씩 복리로 오르는 배율 (후반 난이도용)
+
     public event Action OnResourceChange;
 
     private IState currentState;
@@ -32,17 +43,99 @@ public class GameManager : MonoBehaviour
     public int curUnitCost;
     public bool isBattleActive;
 
+    
+
     private void Awake()
     {
-        if (Instance == null) Instance = this;
-        else Destroy(gameObject);
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
     }
 
     private void Start()
     {
         InitGameData(); // 데이터 초기화
+
+        if (dayResultUI != null)
+        {
+            dayResultUI.gameObject.SetActive(false);
+        }
+
         ChangeState(new DayState());
         OnResourceChange?.Invoke();
+    }
+    public void CalculateNextTax()
+    {
+        // 공식: (현재 세금 + 고정 증가분) * 복리 배율 * (계약서 배율)
+        float rawTax = (currentTax + taxIncreaseAmount) * taxGrowthRate;
+
+        // 계약서 효과(taxMultiplier) 적용
+        currentTax = Mathf.FloorToInt(rawTax * taxMultiplier);
+
+        // taxMultiplier는 일회성이므로 다시 1로 초기화해야 함 (중요!)
+        // 만약 영구 감면 계약이라면 초기화 안 해도 됨. 기획에 따라 결정.
+        // 여기서는 '다음 날 세금 감면'이므로 초기화함.
+        taxMultiplier = 1.0f;
+    }
+
+    public void PayTaxAndAdvanceDay()
+    {
+        Debug.Log($"[세금 납부] {currentTax} 골드 징수 시도.");
+
+        // 1. 골드 납부 시도
+        if (gold >= currentTax)
+        {
+            gold -= currentTax;
+            Debug.Log("세금 납부 완료.");
+        }
+        else
+        {
+            // 돈 부족 -> 몸으로 때우기
+            int deficit = currentTax - gold;
+            gold = 0;
+            DecreaseLife(deficit);
+            Debug.Log($"세금 부족! 생명력 {deficit} 차감됨.");
+        }
+
+        // 2. 다음 날 세금 책정
+        CalculateNextTax();
+
+        // 3. 날짜 증가 및 상태 변경
+        day++;
+        OnResourceChange?.Invoke();
+
+        ChangeState(new DayState()); // 다시 낮으로
+    }
+
+    public void TogglePause()
+    {
+        if (Time.timeScale > 0)
+        {
+            Time.timeScale = 0; // 멈춤
+            Debug.Log("게임 일시정지");
+
+            pausePanel.SetActive(true);
+        }
+        else
+        {
+            Time.timeScale = 1; // 보통 속도 재개
+            Debug.Log("게임 재개");
+        }
+    }
+
+    // 배속 버튼용 (1x, 2x, 3x)
+    public void SetGameSpeed(float speed)
+    {
+        // 0이면 안 되므로 최소 1 이상, 혹은 0.5 등 기획에 맞게
+        Time.timeScale = speed;
+        Debug.Log($"게임 속도 변경: x{speed}");
     }
 
     // 게임 데이터 및 버프 초기화 (재시작 시 필수)
@@ -62,6 +155,33 @@ public class GameManager : MonoBehaviour
         isSlimeDoubleBuffActive = false;
         isSoulHarvestActive = false;
         taxMultiplier = 1f;
+    }
+
+    public void RepayTaxPartial(int amount)
+    {
+        // 1. 갚을 세금이 없으면 리턴
+        if (currentTax <= 0)
+        {
+            Debug.Log("갚을 세금이 없습니다.");
+            return;
+        }
+
+        // 2. 가진 돈보다 더 많이 갚을 순 없음
+        if (gold < amount)
+        {
+            // 돈이 부족하면 가진 돈 전부를 털어서 갚는다 (선택 사항)
+            amount = gold;
+            if (amount == 0) return; // 0원이면 무시
+        }
+
+        // 3. 자원 처리
+        gold -= amount;
+        currentTax -= amount;
+
+        Debug.Log($"[중도 상환] {amount}G 납부 완료. 남은 세금: {currentTax}");
+
+        // 4. UI 갱신 (자원 변동 이벤트 호출)
+        OnResourceChange?.Invoke();
     }
 
     private void Update()

@@ -4,29 +4,18 @@ public class TaxState : IState
 {
     public void Enter(GameManager gm)
     {
-        Debug.Log(" [세금 납부] 세금을 징수합니다...");
-        
-        if (gm.gold >= gm.currentTax)
+        // 연결된 UI가 있는지 확인
+        if (gm.dayResultUI != null)
         {
-            gm.gold -= gm.currentTax;
-            Debug.Log($"세금 {gm.currentTax}G 납부 완료! 남은 돈: {gm.gold}");
-
-            gm.NextDay();
-
-            // 납부 성공 시 -> 다음 날 아침이 밝습니다.
-            gm.ChangeState(new DayState());
+            // UI 스크립트 안에 panel.SetActive(true)가 들어있으므로
+            // 이 함수만 호출하면 알아서 켜집니다.
+            gm.dayResultUI.ShowResult();
         }
         else
         {
-            int shortage = gm.currentTax - gm.gold; // 부족한 금액 계산
-            gm.gold = 0;
-            Debug.Log($"돈이 {shortage}G 부족합니다! 영혼(Life)으로 대체 납부합니다.");
-            gm.DecreaseLife(shortage);
-            if (gm.life > 0)
-            {
-                gm.NextDay();
-                gm.ChangeState(new DayState());
-            }
+            // 만약 연결을 깜빡했다면 에러 로그 띄우고 자동 진행 (안전장치)
+            Debug.LogError("GameManager에 DayResultUI가 연결되지 않았습니다! 인스펙터 확인하세요.");
+            gm.PayTaxAndAdvanceDay();
         }
     }
 
