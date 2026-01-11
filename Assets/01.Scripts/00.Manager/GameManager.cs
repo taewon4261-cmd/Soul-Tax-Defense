@@ -32,8 +32,8 @@ public class GameManager : MonoBehaviour
     [Header("Game Data")]
     public int day = 1;
     public int gold = 100;
-    public int life = 1000;
-    public int maxLife = 1000;
+    public int life = 500;
+    public int maxLife = 500;
     public int currentTax = 50;
 
     [Header("Tax Settings")]

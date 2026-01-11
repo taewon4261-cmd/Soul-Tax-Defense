@@ -1513,7 +1513,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 817254201}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: SetGameSpeed
+        m_MethodName: SetGameSpeed3
         m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2996,6 +2996,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 423e406dbda49764aa68a8a9413c57b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed1: {fileID: 2052382398}
+  speed2: {fileID: 1594661553}
+  speed3: {fileID: 413174253}
   pausePanel: {fileID: 2051376611}
   dayResultUI: {fileID: 1691542096}
   skeletonAtkMult: 1
@@ -3008,8 +3011,8 @@ MonoBehaviour:
   taxMultiplier: 1
   day: 1
   gold: 100
-  life: 5
-  maxLife: 1000
+  life: 500
+  maxLife: 500
   currentTax: 50
   baseTax: 50
   taxIncreaseAmount: 30
@@ -5164,7 +5167,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 817254201}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: SetGameSpeed
+        m_MethodName: SetGameSpeed2
         m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
