@@ -6,6 +6,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [Header("배속버튼")]
+    public GameObject speed1;
+    public GameObject speed2;
+    public GameObject speed3;
+
     [Header("PausePanel")]
     public GameObject pausePanel;
 
@@ -133,9 +138,25 @@ public class GameManager : MonoBehaviour
     // 배속 버튼용 (1x, 2x, 3x)
     public void SetGameSpeed(float speed)
     {
-        // 0이면 안 되므로 최소 1 이상, 혹은 0.5 등 기획에 맞게
+
         Time.timeScale = speed;
         Debug.Log($"게임 속도 변경: x{speed}");
+        speed2.SetActive(true);
+        speed1.SetActive(false);
+    }
+    public void SetGameSpeed2(float speed)
+    {
+        Time.timeScale = speed;
+        Debug.Log($"게임 속도 변경: x{speed}");
+        speed3.SetActive(true);
+        speed2.SetActive(false);
+    }
+    public void SetGameSpeed3(float speed)
+    {
+        Time.timeScale = speed;
+        Debug.Log($"게임 속도 변경: x{speed}");
+        speed1.SetActive(true);
+        speed3.SetActive(false);
     }
 
     // 게임 데이터 및 버프 초기화 (재시작 시 필수)
