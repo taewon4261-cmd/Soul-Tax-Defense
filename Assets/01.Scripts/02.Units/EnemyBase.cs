@@ -11,6 +11,8 @@ public class EnemyBase : MonoBehaviour
     private float currentAttackCooldown = 0f;
     private bool isAttacking;
 
+    private bool isDead;
+
     public LayerMask unitLayer;
 
 
@@ -23,6 +25,8 @@ public class EnemyBase : MonoBehaviour
 
     public void TakeDamage(int dmg)
     {
+        if (isDead) return;
+
         hp -= dmg;
         if (hp <= 0)
         {
@@ -31,6 +35,10 @@ public class EnemyBase : MonoBehaviour
     }
     void Die(bool giveReward)
     {
+        if (isDead) return;
+
+        isDead = true;
+
         if (WaveManager.Instance != null)
         {
             WaveManager.Instance.OnEnemyKilled();
@@ -93,6 +101,8 @@ public class EnemyBase : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (isDead) return;
+ 
         Wall wall = collision.gameObject.GetComponent<Wall>();
        
         if (wall != null)
