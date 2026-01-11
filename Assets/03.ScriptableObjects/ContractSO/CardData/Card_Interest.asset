@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 122361f2cae7dab449c40b9302c145b6, type: 3}
   m_Name: Card_Interest
   m_EditorClassIdentifier: 
-  contractName: "\uBCF5\uB9AC \uC608"
+  contractName: "\uBCF5\uB9AC \uC608\uAE08"
   icon: {fileID: 0}
   uiDescription: "\uD604\uC7AC \uBCF4\uC720\uD55C \uACE8\uB4DC\uC758 10%\uB97C \uC774\uC790\uB85C
     \uBC1B\uC2B5\uB2C8\uB2E4."
