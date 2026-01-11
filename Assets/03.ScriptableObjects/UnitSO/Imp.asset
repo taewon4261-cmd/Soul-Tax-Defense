@@ -15,7 +15,7 @@ MonoBehaviour:
   unitName: "\uC784\uD504"
   cost: 15
   maxHp: 30
-  attackPower: 5
-  attackSpeed: 3
+  attackPower: 8
+  attackSpeed: 1
   attackRange: 3
   unitSprite: {fileID: 21300000, guid: bcc8ce8f09770bf4995c4224e0ce3e2b, type: 3}
