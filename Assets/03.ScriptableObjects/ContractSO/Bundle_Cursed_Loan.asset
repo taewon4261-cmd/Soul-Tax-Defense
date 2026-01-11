@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de31cd0ed06894e45875d07e888d4106, type: 3}
+  m_Name: Bundle_Cursed_Loan
+  m_EditorClassIdentifier: 
+  description: 
+  effects:
+  - {fileID: 11400000, guid: dbf41bbd3978eb0429d26de483cd86c6, type: 2}
+  - {fileID: 11400000, guid: 298e96328953d0e48af3f542f5ec94a0, type: 2}

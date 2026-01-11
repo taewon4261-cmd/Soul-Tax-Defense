@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de31cd0ed06894e45875d07e888d4106, type: 3}
+  m_Name: Bundle_Imp_PowerUp
+  m_EditorClassIdentifier: 
+  description: 
+  effects:
+  - {fileID: 11400000, guid: 33fa1a4690f28d24cad1536a69739f19, type: 2}
+  - {fileID: 11400000, guid: d22350ccf111a3c4ca883d561cfb45fb, type: 2}

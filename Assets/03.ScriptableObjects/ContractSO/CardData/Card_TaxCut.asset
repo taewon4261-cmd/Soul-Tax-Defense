@@ -10,10 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 122361f2cae7dab449c40b9302c145b6, type: 3}
-  m_Name: Gold _ 300
+  m_Name: Card_TaxCut
   m_EditorClassIdentifier: 
-  contractName: 
-  description: 
+  contractName: "\uC138\uAE08 \uAC10\uBA74"
   icon: {fileID: 0}
-  type: 0
-  value: 300
+  uiDescription: "\uB2E4\uC74C \uB0A0 \uC138\uAE08\uC774 20% \uAC10\uBA74\uB429\uB2C8\uB2E4."
+  effect: {fileID: 11400000, guid: e2a47f96cdce6cb45a3b5683b39b248a, type: 2}

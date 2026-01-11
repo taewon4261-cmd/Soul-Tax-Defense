@@ -1,86 +1,112 @@
 using System.Collections.Generic;
 using UnityEngine;
-using TMPro;      // TextMeshPro 사용 시 필수
+using TMPro;
 using UnityEngine.UI;
+using System.Linq; // 리스트 섞기(Shuffle)를 위해 필요
 
 public class ContractManager : MonoBehaviour
 {
     public static ContractManager Instance;
 
     [Header("Data")]
-    public List<ContractDataSO> allContracts; // 게임에 존재하는 모든 계약서 리스트
+    public List<ContractDataSO> allContracts; // 에디터에서 만든 SO 8개를 여기에 할당
 
-    [Header("UI")]
-    public GameObject contractPanel;   // 전체 패널
-    public Button[] cardButtons;       // 카드 버튼 3개
-    public TextMeshProUGUI[] titleTexts; // 각 버튼의 제목 텍스트 3개
-    public TextMeshProUGUI[] descTexts;  // 각 버튼의 설명 텍스트 3개
+    [Header("UI References")]
+    public GameObject contractPanel;
+    public Button[] cardButtons;
+    public TextMeshProUGUI[] titleTexts;
+    public TextMeshProUGUI[] descTexts;
+    public Image[] iconImages; // 아이콘 표시용 (UI에 Image가 있다면 연결)
+
+    [Header("Settings")]
+    [Range(0f, 1f)] public float failChance = 0.25f; // 25% 꽝 확률
 
     private void Awake()
     {
         if (Instance == null) Instance = this;
     }
 
-    // ContractState에서 호출할 함수
+    // ContractState 진입 시 호출
     public void ShowRandomContracts()
     {
-        contractPanel.SetActive(true); // 패널 켜기
+        contractPanel.SetActive(true);
+        Time.timeScale = 0; // 시간 정지
 
-        // 버튼 3개에 랜덤 데이터 세팅
+        // 1. 리스트를 랜덤으로 섞어서 상위 3개 가져오기 (중복 방지)
+        // OrderBy(GUID) 방식이 가장 간단한 셔플 방법 중 하나
+        var selectedContracts = allContracts.OrderBy(x => System.Guid.NewGuid()).Take(3).ToList();
+
+        // 2. UI 버튼 세팅
         for (int i = 0; i < cardButtons.Length; i++)
         {
-            // 리스트에서 랜덤으로 하나 뽑기 (중복 방지 로직은 나중에 추가)
-            int randIndex = Random.Range(0, allContracts.Count);
-            ContractDataSO data = allContracts[randIndex];
-
-            // UI 갱신
-            titleTexts[i].text = data.contractName;
-            descTexts[i].text = data.description;
-
-            // 버튼 클릭 이벤트 동적 연결 (이전 리스너 제거 후 추가)
-            int index = i; // 클로저 문제 방지용 로컬 변수
-            cardButtons[i].onClick.RemoveAllListeners();
-            Debug.Log($"버튼 {i}번에 이벤트 연결함");
-
-            cardButtons[i].onClick.AddListener(() =>
+            if (i < selectedContracts.Count)
             {
-                Debug.Log("버튼 클릭됨!"); // 클릭했을 때 이 로그가 뜨는지 확인
-                OnContractSelected(data);
-            });
+                ContractDataSO data = selectedContracts[i];
+                cardButtons[i].gameObject.SetActive(true);
+
+                // 텍스트/이미지 갱신
+                titleTexts[i].text = data.contractName;
+                descTexts[i].text = data.uiDescription; // data에 description 변수명 확인 필요
+                if (iconImages != null && iconImages.Length > i && data.icon != null)
+                {
+                    iconImages[i].sprite = data.icon;
+                }
+
+                // 버튼 리스너 연결
+                int index = i; // 클로저 캡처 방지
+                cardButtons[i].onClick.RemoveAllListeners();
+                cardButtons[i].onClick.AddListener(() => OnContractClicked(data));
+            }
+            else
+            {
+                cardButtons[i].gameObject.SetActive(false); // 데이터 없으면 버튼 끄기
+            }
         }
-
     }
 
-    void OnContractSelected(ContractDataSO data)
+    // 버튼 클릭 시 호출
+    void OnContractClicked(ContractDataSO data)
     {
-        Debug.Log($"계약 선택됨: {data.contractName}");
+        // 3. 25% 확률로 '꽝' 판정
+        float roll = Random.value; // 0.0 ~ 1.0 랜덤
 
-        // 1. 효과 적용
-        ApplyEffect(data);
-
-        // 2. 패널 끄기
-        contractPanel.SetActive(false);
-
-        // 3. 다음 단계(세금)로 이동
-        GameManager.Instance.ChangeState(new TaxState());
-    }
-
-    void ApplyEffect(ContractDataSO data)
-    {
-        switch (data.type)
+        if (roll < failChance)
         {
-            case ContractType.GoldGain:
-                GameManager.Instance.AddGold((int)data.value);
-                break;
+            // --- [꽝!] ---
+            Debug.Log($"<color=red>[계약 실패] 사기꾼이었습니다! (확률: {roll:F2})</color>");
 
-            case ContractType.UnitAttackBuff:
-                // TODO: 나중에 UnitManager를 통해 모든 유닛 공격력 증가 구현
-                Debug.Log("아직 공격력 버프 기능은 미구현입니다.");
-                break;
+            // 패널티: 골드 10% 차감
+            int penalty = Mathf.FloorToInt(GameManager.Instance.gold * 0.1f);
+            GameManager.Instance.AddGold(-penalty);
 
-            case ContractType.TaxReduction:
-                // TODO: 세금 감소 로직
-                break;
+            // TODO: 여기에 "사기당했습니다!" 팝업 연출을 넣으면 좋습니다.
         }
+        else
+        {
+            // --- [성공!] ---
+            Debug.Log($"<color=green>[계약 성공] {data.contractName} 적용. (확률: {roll:F2})</color>");
+
+            // ScriptableObject의 효과 발동
+            // (주의: data.effect가 Null이면 에러나니 에디터에서 꼭 연결 확인)
+            if (data.effect != null)
+            {
+                data.effect.ApplyEffect();
+            }
+            else
+            {
+                Debug.LogError($"'{data.contractName}' 데이터에 Effect SO가 연결되지 않았습니다!");
+            }
+        }
+
+        EndContractPhase();
+    }
+
+    void EndContractPhase()
+    {
+        contractPanel.SetActive(false);
+        Time.timeScale = 1; // 시간 재개
+
+        // 세금 납부 단계로 이동
+        GameManager.Instance.ChangeState(new TaxState());
     }
 }
