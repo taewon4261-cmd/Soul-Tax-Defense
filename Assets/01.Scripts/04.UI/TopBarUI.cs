@@ -37,8 +37,8 @@ public class TopBarUI : MonoBehaviour
 
         // 문자열 보간($)을 사용해 깔끔하게 표시
         dayText.text = $"Day {GameManager.Instance.day}";
-        lifeText.text = $"HP: {GameManager.Instance.life}";
-        goldText.text = $"Gold: {GameManager.Instance.gold}";
-        taxText.text = $"Tax: {GameManager.Instance.currentTax}";
+        lifeText.text = $"{GameManager.Instance.life}";
+        goldText.text = $"{GameManager.Instance.gold}";
+        taxText.text = $"{GameManager.Instance.currentTax}";
     }
 }

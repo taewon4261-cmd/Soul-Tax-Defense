@@ -52,7 +52,7 @@ public class WaveManager : MonoBehaviour
 
     void SpawnEnemy(GameObject prefab)
     {
-        float randomY = Random.Range(-1, 6); 
+        float randomY = Random.Range(-0.5f, 3.5f); 
         Vector2 pos = new Vector2(xSpawnPos, randomY);
 
         Instantiate(prefab, pos, Quaternion.identity);

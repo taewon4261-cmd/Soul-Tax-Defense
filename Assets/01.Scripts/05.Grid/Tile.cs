@@ -5,30 +5,33 @@ using UnityEngine.EventSystems;
 
 public class Tile : MonoBehaviour
 {
-    private Color originalColor;
     private SpriteRenderer rend;
 
     public bool isOccupied;
     private UnitBase curUnit;
 
+    private Color normalColor = new Color(0, 0, 0, 0.3f);
+    private Color hoverColor = new Color(1, 0.92f, 0.016f, 0.5f);
+
     private void Awake()
     {
         rend = GetComponent<SpriteRenderer>();
-        originalColor = rend.color;
+        // 시작할 때 색상을 normalColor로 강제 설정
+        rend.color = normalColor;
     }
 
     private void OnMouseEnter()
     {
-        if (!isOccupied)
+        if (!EventSystem.current.IsPointerOverGameObject() && !isOccupied)
         {
-            rend.color = Color.yellow;
+            rend.color = hoverColor;
         }
 
     }
 
     private void OnMouseExit()
     {
-        rend.color = originalColor;
+        rend.color = normalColor;
     }
 
     private void OnMouseDown()
@@ -46,19 +49,23 @@ public class Tile : MonoBehaviour
         {
             GameManager.Instance.OnTileClicked(this);
         }
-        rend.color = originalColor;
+        rend.color = normalColor;
     }
 
     public void SetUnit(UnitBase unit)
     {
         isOccupied = true;
         curUnit = unit;
+
+        rend.enabled = false;
     }
 
     public void ClearUnit()
     {
         isOccupied = false;
         curUnit = null;
+
+         rend.enabled = true;
         Debug.Log("유닛이 죽어서 타일이 비었습니다");
     }
 

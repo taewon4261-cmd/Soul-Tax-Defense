@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 122361f2cae7dab449c40b9302c145b6, type: 3}
   m_Name: Card_Slime
   m_EditorClassIdentifier: 
-  contractName: "\uC2AC\uB77C\uC784 \uAC15"
+  contractName: "\uC2AC\uB77C\uC784 \uAC15\uD654"
   icon: {fileID: 0}
   uiDescription: "\uC2AC\uB77C\uC784\uC758 \uACE8\uB4DC \uC0DD\uC0B0\uB7C9\uC774
     2\uBC30\uAC00 \uB429\uB2C8\uB2E4."

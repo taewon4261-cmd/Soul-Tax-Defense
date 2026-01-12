@@ -70,12 +70,14 @@ public class EnemyBase : MonoBehaviour
 
     void DetectAndAttackUnit()
     {
-        float range = 0.5f;
+        float range = 0.6f;
 
        
         Debug.DrawRay(transform.position, Vector2.left * range, Color.red);
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.left, range, unitLayer);
+        Vector2 rayStart = (Vector2)transform.position + (Vector2.left * 0.3f);
+
+        RaycastHit2D hit = Physics2D.Raycast(rayStart, Vector2.left, range, unitLayer);
 
         if (hit.collider != null)
         {
@@ -89,6 +91,14 @@ public class EnemyBase : MonoBehaviour
                     Debug.Log($"적 -> 유닛({unit.name}) 공격!");
                     unit.TakeDamage(data.atk);
                     currentAttackCooldown = 2f;
+                }
+
+                Wall wall = hit.collider.GetComponent<Wall>();
+                if (wall != null)
+                {
+                    wall.TakeDamage(data.atk);
+                    currentAttackCooldown = 2f;
+                    Debug.Log("성벽 공격 중...");
                 }
             }
         }

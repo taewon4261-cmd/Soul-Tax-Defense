@@ -6,6 +6,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [Header("난이도(아직 미구현)")]
+    public int difficultyMultiplier = 1;
+
     [Header("배속버튼")]
     public GameObject speed1;
     public GameObject speed2;
@@ -16,6 +19,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI References")]
     public DayResultUI dayResultUI;
+    public ResultUI resultUI;
 
     [Header("Global Buffs (계약 효과)")]
     public float skeletonAtkMult = 1f;
@@ -48,6 +52,8 @@ public class GameManager : MonoBehaviour
     public int curUnitCost;
     public bool isBattleActive;
 
+    public WaveManager waveManager;
+
     
 
     private void Awake()
@@ -55,7 +61,6 @@ public class GameManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -66,16 +71,47 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        InitGameData(); // 데이터 초기화
+        Time.timeScale = 1f;
 
-        if (dayResultUI != null)
-        {
-            dayResultUI.gameObject.SetActive(false);
-        }
+        if (dayResultUI != null) dayResultUI.gameObject.SetActive(false);
+        if (resultUI != null) resultUI.gameObject.SetActive(false);
+        if (pausePanel != null) pausePanel.SetActive(false);
 
+        // 2. 게임 데이터만 순수하게 초기화
+        InitGameData();
+
+        // 3. 상태를 강제로 '낮'으로 설정하여 루프를 처음부터 시작하게 함
+        isBattleActive = false;
         ChangeState(new DayState());
+
+        // 4. 자원 UI 업데이트 알림
         OnResourceChange?.Invoke();
     }
+    public void FinishGame(bool isClear)
+    {
+        // 1. 보상 계산 로직
+        // 웨이브당 10개 * 난이도 + 클리어 시 100개
+        int waveReward = waveManager.currentWaveIndex * 10 * difficultyMultiplier;
+        int clearBonus = isClear ? 100 : 0;
+        int totalReward = waveReward + clearBonus;
+
+        // 2. DataManager에 영혼석 저장
+        if (DataManager.Instance != null && totalReward > 0)
+        {
+            DataManager.Instance.AddSoulStones(totalReward);
+        }
+
+        // 3. 결과 UI 띄우기 (이 한 줄이 핵심!)
+        if (resultUI != null)
+        {
+            // 아까 만든 ResultUI의 ShowResult 함수 호출
+            resultUI.ShowResult(totalReward);
+        }
+
+        // 4. 게임 정지
+        Time.timeScale = 0;
+    }
+
     public void CalculateNextTax()
     {
         // 공식: (현재 세금 + 고정 증가분) * 복리 배율 * (계약서 배율)
@@ -314,7 +350,11 @@ public class GameManager : MonoBehaviour
 
     public void OnClickStartBattle()
     {
+        speed1.SetActive(false);
+        speed2.SetActive(true);
+        speed3.SetActive(false);
         if (!isBattleActive) ChangeState(new NightState());
+
     }
 
     public void OnTileClicked(Tile tile)
