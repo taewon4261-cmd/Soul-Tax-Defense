@@ -66,7 +66,11 @@ public class UnitBase : MonoBehaviour
 
     void Attack(EnemyBase target)
     {
-        
+
+        if (data != null && data.attackSound != null)
+        {
+            SoundManager.Instance.PlaySFX(data.attackSound);
+        }
         if (rangeAttack != null)
         {
             
@@ -123,27 +127,3 @@ public class UnitBase : MonoBehaviour
     }
 
 }
-
-
-
-
-//public Tile CurrentTile { get; set; }
-
-//[SerializeField] protected int hp = 50;
-
-//public void TakeDamage(int dmg)
-//{
-//    hp -= dmg;
-//    if (hp <= 0) Die();
-//}
-
-//protected virtual void Die()
-//{
-//    if (CurrentTile != null)
-//    {
-//        CurrentTile.Clear();
-//        CurrentTile = null;
-//    }
-
-//    Destroy(gameObject);
-//}

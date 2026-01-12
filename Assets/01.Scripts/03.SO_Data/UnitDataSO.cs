@@ -14,4 +14,6 @@ public class UnitDataSO : ScriptableObject
     public float attackRange;
     public Sprite unitSprite;
 
+    public AudioClip attackSound;
+
 }

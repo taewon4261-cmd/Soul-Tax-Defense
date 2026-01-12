@@ -21,10 +21,14 @@ public class Slime : UnitBase
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.AddGold(income);
+
+                SoundManager.Instance.PlaySFX(data.attackSound);
             }
             timer = 0;
         }
-    }
+        
+
+        }
 
     protected override void Update()
     {

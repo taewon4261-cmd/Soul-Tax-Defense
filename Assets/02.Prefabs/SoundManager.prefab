@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7981929609201358181
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1225837570986982727}
+  - component: {fileID: 7571530179434053487}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1225837570986982727
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7981929609201358181}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.8929925, y: 1.4748372, z: -0.05111582}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7571530179434053487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7981929609201358181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e6f76a7684ffed47b2417a350c5cd82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonClick: {fileID: 8300000, guid: de0fcfd9fd863db4584de22a52c051d3, type: 3}
+  contractSelect: {fileID: 8300000, guid: aa750cf05cbbb1b45aba3f1b34522c57, type: 3}
+  stageClear: {fileID: 8300000, guid: c57c561b150ec9b419ab39966202af87, type: 3}
+  clickFail: {fileID: 8300000, guid: dc6614beca09347ec9b258f12d154bdd, type: 3}
+  btnClick: {fileID: 8300000, guid: c00c9c3688208a649be386398ed890cc, type: 3}
+  skeletonAtk: {fileID: 8300000, guid: c267a9efeda42df48856f34cf89cec5d, type: 3}
+  impAtk: {fileID: 8300000, guid: fd31547c676dd7146b545d862a298271, type: 3}
+  enemyAtk: {fileID: 8300000, guid: 8835978a171cf1b448562c669a6f211b, type: 3}
+  slimeProduce: {fileID: 8300000, guid: 00d6b67e966fa3d43ad67ffb7177ede9, type: 3}
+  barricadeHit: {fileID: 8300000, guid: fa7b42863097c3948b977abdb9a87f1f, type: 3}
