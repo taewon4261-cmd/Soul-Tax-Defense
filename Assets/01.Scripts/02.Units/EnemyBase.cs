@@ -46,7 +46,7 @@ public class EnemyBase : MonoBehaviour
 
         if (giveReward && GameManager.Instance != null)
         {
-            GameManager.Instance.AddGold(data.goldReward);
+            GameManager.Instance.AddGold(Random.Range(5,10));
         }
         Destroy(gameObject);
     }

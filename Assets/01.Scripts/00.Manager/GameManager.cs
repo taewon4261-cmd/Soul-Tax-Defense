@@ -89,27 +89,40 @@ public class GameManager : MonoBehaviour
     }
     public void FinishGame(bool isClear)
     {
-        // 1. 보상 계산 로직
-        // 웨이브당 10개 * 난이도 + 클리어 시 100개
-        int waveReward = waveManager.currentWaveIndex * 10 * difficultyMultiplier;
-        int clearBonus = isClear ? 100 : 0;
-        int totalReward = waveReward + clearBonus;
+        //// 1. 보상 계산 로직
+        //// 웨이브당 10개 * 난이도 + 클리어 시 100개
+        //int waveReward = waveManager.currentWaveIndex * 10 * difficultyMultiplier;
+        //int clearBonus = isClear ? 100 : 0;
+        //int totalReward = waveReward + clearBonus;
 
-        // 2. DataManager에 영혼석 저장
-        if (DataManager.Instance != null && totalReward > 0)
+        //// 2. DataManager에 영혼석 저장
+        //if (DataManager.Instance != null && totalReward > 0)
+        //{
+        //    DataManager.Instance.AddSoulStones(totalReward);
+        //}
+
+        //// 3. 결과 UI 띄우기 (이 한 줄이 핵심!)
+        //if (resultUI != null)
+        //{
+        //    // 아까 만든 ResultUI의 ShowResult 함수 호출
+        //    resultUI.ShowResult(totalReward);
+        //}
+
+        //// 4. 게임 정지
+        //Time.timeScale = 0;
+
+        if (resultUI == null)
         {
-            DataManager.Instance.AddSoulStones(totalReward);
+            resultUI = FindObjectOfType<ResultUI>(true);
         }
 
-        // 3. 결과 UI 띄우기 (이 한 줄이 핵심!)
         if (resultUI != null)
         {
-            // 아까 만든 ResultUI의 ShowResult 함수 호출
-            resultUI.ShowResult(totalReward);
+            resultUI.gameObject.SetActive(true); // 패널 강제 활성화
+            resultUI.ShowResult(waveManager != null ? waveManager.currentWaveIndex * 10 : 0);
         }
 
-        // 4. 게임 정지
-        Time.timeScale = 0;
+        Time.timeScale = 0; // 게임 정지
     }
 
     public void CalculateNextTax()
@@ -119,6 +132,8 @@ public class GameManager : MonoBehaviour
 
         // 계약서 효과(taxMultiplier) 적용
         currentTax = Mathf.FloorToInt(rawTax * taxMultiplier);
+
+        currentTax = Mathf.Max(0, Mathf.FloorToInt(rawTax * taxMultiplier));
 
         // taxMultiplier는 일회성이므로 다시 1로 초기화해야 함 (중요!)
         // 만약 영구 감면 계약이라면 초기화 안 해도 됨. 기획에 따라 결정.
@@ -143,6 +158,16 @@ public class GameManager : MonoBehaviour
             gold = 0;
             DecreaseLife(deficit);
             Debug.Log($"세금 부족! 생명력 {deficit} 차감됨.");
+        }
+
+        if (day >= 7)
+        {
+            // 7일차면 계약서 UI 강제로 찾아 끄기
+            GameObject dayResult = GameObject.Find("DayResultPanel");
+            if (dayResult != null) dayResult.SetActive(false);
+
+            FinishGame(true);
+            return;
         }
 
         // 2. 다음 날 세금 책정
@@ -222,18 +247,21 @@ public class GameManager : MonoBehaviour
             Debug.Log("갚을 세금이 없습니다.");
             return;
         }
-
         // 2. 가진 돈보다 더 많이 갚을 순 없음
         if (gold < amount)
         {
+           
             // 돈이 부족하면 가진 돈 전부를 털어서 갚는다 (선택 사항)
             amount = gold;
+          
             if (amount == 0) return; // 0원이면 무시
         }
 
         // 3. 자원 처리
         gold -= amount;
         currentTax -= amount;
+
+        if (currentTax < 0) currentTax = 0;
 
         Debug.Log($"[중도 상환] {amount}G 납부 완료. 남은 세금: {currentTax}");
 
@@ -302,6 +330,7 @@ public class GameManager : MonoBehaviour
         // 배율(taxMultiplier)이 0.8이면 세금이 20% 줄어든 상태로 계산됨
         int baseIncrease = 50;
         currentTax = Mathf.FloorToInt((currentTax + baseIncrease) * taxMultiplier);
+        if (currentTax < 0) currentTax = 0;
 
         Debug.Log($"[Day {day}] 세금 갱신: {currentTax} (배율: {taxMultiplier})");
         OnResourceChange?.Invoke();
