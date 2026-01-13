@@ -3505,6 +3505,7 @@ MonoBehaviour:
   pausePanel: {fileID: 2051376611}
   dayResultUI: {fileID: 1691542096}
   resultUI: {fileID: 789029122}
+  dayResultPanel: {fileID: 1691542094}
   skeletonAtkMult: 1
   skeletonHpMult: 1
   impAtkMult: 1
@@ -3524,7 +3525,7 @@ MonoBehaviour:
   curUnitPrefab: {fileID: 0}
   curUnitCost: 0
   isBattleActive: 0
-  waveManager: {fileID: 0}
+  waveManager: {fileID: 10052303}
 --- !u!4 &817254202
 Transform:
   m_ObjectHideFlags: 0

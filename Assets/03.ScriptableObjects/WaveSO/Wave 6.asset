@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Wave 6
   m_EditorClassIdentifier: 
   enemyPrefab: {fileID: 4234428447613554377, guid: 520aa553688276e4fb13440b6ecb2ff9, type: 3}
-  count: 30
+  count: 1
   spawnInterval: 1

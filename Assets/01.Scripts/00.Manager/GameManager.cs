@@ -21,6 +21,8 @@ public class GameManager : MonoBehaviour
     public DayResultUI dayResultUI;
     public ResultUI resultUI;
 
+    public GameObject dayResultPanel;
+
     [Header("Global Buffs (계약 효과)")]
     public float skeletonAtkMult = 1f;
     public float skeletonHpMult = 1f;
@@ -89,41 +91,34 @@ public class GameManager : MonoBehaviour
     }
     public void FinishGame(bool isClear)
     {
-        //// 1. 보상 계산 로직
-        //// 웨이브당 10개 * 난이도 + 클리어 시 100개
-        //int waveReward = waveManager.currentWaveIndex * 10 * difficultyMultiplier;
-        //int clearBonus = isClear ? 100 : 0;
-        //int totalReward = waveReward + clearBonus;
+        // 1. 보상 계산 로직
+        // 웨이브당 10개 * 난이도 + 클리어 시 100개
+        int waveReward = waveManager.currentWaveIndex * 10 * difficultyMultiplier;
+        int clearBonus = isClear ? 100 : 0;
+        int totalReward = waveReward + clearBonus;
 
-        //// 2. DataManager에 영혼석 저장
-        //if (DataManager.Instance != null && totalReward > 0)
-        //{
-        //    DataManager.Instance.AddSoulStones(totalReward);
-        //}
-
-        //// 3. 결과 UI 띄우기 (이 한 줄이 핵심!)
-        //if (resultUI != null)
-        //{
-        //    // 아까 만든 ResultUI의 ShowResult 함수 호출
-        //    resultUI.ShowResult(totalReward);
-        //}
-
-        //// 4. 게임 정지
-        //Time.timeScale = 0;
-
-        if (resultUI == null)
+        // 2. DataManager에 영혼석 저장
+        if (DataManager.Instance != null && totalReward > 0)
         {
-            resultUI = FindObjectOfType<ResultUI>(true);
+            DataManager.Instance.AddSoulStones(totalReward);
         }
 
+        if (dayResultUI != null)
+        {
+            dayResultUI.gameObject.SetActive(false);
+        }
+
+        // 3. 결과 UI 띄우기 (이 한 줄이 핵심!)
         if (resultUI != null)
         {
-            resultUI.gameObject.SetActive(true); // 패널 강제 활성화
-            resultUI.ShowResult(waveManager != null ? waveManager.currentWaveIndex * 10 : 0);
+            // 아까 만든 ResultUI의 ShowResult 함수 호출
+            resultUI.ShowResult(totalReward);
         }
 
-        Time.timeScale = 0; // 게임 정지
+        // 4. 게임 정지
+        Time.timeScale = 0;
     }
+        
 
     public void CalculateNextTax()
     {
@@ -224,7 +219,7 @@ public class GameManager : MonoBehaviour
     public void InitGameData()
     {
         day = 1;
-        gold = 100;
+        gold = 100000;
         life = maxLife;
         currentTax = 50;
 
@@ -272,6 +267,16 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         if (currentState != null) currentState.Execute(this);
+
+        if (Input.GetKeyDown(KeyCode.Space)) // 빠른확인을 위한 테스트용 코드
+        {
+            EnemyBase[] enemies = GameObject.FindObjectsOfType<EnemyBase>();
+
+            foreach (EnemyBase enemy in enemies)
+            {
+                enemy.TakeDamage(999);
+            }
+        }
     }
 
     public void ChangeState(IState newState)
