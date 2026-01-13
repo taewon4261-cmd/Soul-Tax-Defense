@@ -103,11 +103,6 @@ public class GameManager : MonoBehaviour
             DataManager.Instance.AddSoulStones(totalReward);
         }
 
-        if (dayResultUI != null)
-        {
-            dayResultUI.gameObject.SetActive(false);
-        }
-
         // 3. 결과 UI 띄우기 (이 한 줄이 핵심!)
         if (resultUI != null)
         {
