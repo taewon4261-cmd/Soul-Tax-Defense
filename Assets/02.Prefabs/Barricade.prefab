@@ -134,7 +134,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 1baae76996f34144e9f7feec1723ceb5, type: 2}
+  healthBarPrefab: {fileID: 5545245642814800233, guid: b5617f6bfc4738849886992c6f15fdd1, type: 3}
+  rangeAttack: {fileID: 0}
+  firePoint: {fileID: 0}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 0
-  hp: 0

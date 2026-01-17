@@ -118,10 +118,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e36cc60e84113f4184e991e9a9983d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: a92c62ed386008b46aaa3dc18158fd0d, type: 2}
+  healthBarPrefab: {fileID: 5545245642814800233, guid: b5617f6bfc4738849886992c6f15fdd1, type: 3}
   rangeAttack: {fileID: 0}
   firePoint: {fileID: 0}
-  data: {fileID: 11400000, guid: a92c62ed386008b46aaa3dc18158fd0d, type: 2}
   enemyLayer:
     serializedVersion: 2
     m_Bits: 1024
-  hp: 0

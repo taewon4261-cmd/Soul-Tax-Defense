@@ -162,8 +162,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   data: {fileID: 11400000, guid: 358ecf9ed6145b3459f6dd92acb3f5ce, type: 2}
+  healthBarPrefab: {fileID: 5545245642814800233, guid: b5617f6bfc4738849886992c6f15fdd1, type: 3}
   speed: 0
-  hp: 0
   unitLayer:
     serializedVersion: 2
     m_Bits: 512

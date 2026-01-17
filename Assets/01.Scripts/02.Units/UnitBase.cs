@@ -9,25 +9,33 @@ using static UnityEngine.UI.CanvasScaler;
 
 public class UnitBase : MonoBehaviour
 {
+    public UnitDataSO data;
+    public GameObject healthBarPrefab;
+
+    private HealthModel _healthModel;
+    private HealthPresenter _healthPresenter;
+
+    private Tile ownerTile;
+    protected float attackCool;
+
     public GameObject rangeAttack;
     public Transform firePoint;
 
-    public UnitDataSO data;
 
     public LayerMask enemyLayer;
 
-    public float hp;
-
-    protected float attackCool;
-
-    private Tile ownerTile;
+    private GameObject _healthBarObject; 
 
 
-    public void TakeDamage(int dmg)
+    public void TakeDamage(float dmg)
     {
-        hp -= dmg;
+        if (_healthModel == null) return;
 
-        if (hp <= 0)
+        // 모델의 체력을 깎으면, 프레젠터가 감지해서 UI(View)를 바꿉니다.
+        _healthModel.ChangeHealth(-dmg);
+
+        // 체력 확인도 모델에게 시킵니다.s
+        if (_healthModel.CurrentHp <= 0)
         {
             Die();
         }
@@ -35,21 +43,32 @@ public class UnitBase : MonoBehaviour
 
     void Die()
     {
-        if (ownerTile != null)
+        _healthPresenter?.Dispose();
+
+        if (_healthBarObject != null)
         {
-            ownerTile.ClearUnit();
+            Destroy(_healthBarObject);
         }
 
+        if (ownerTile != null) ownerTile.ClearUnit();
         Destroy(gameObject);
-        
     }
 
-    public void Setup(Tile tile)
+    public void SetUp(Tile tile)
     {
         this.ownerTile = tile;
-        if (ownerTile != null)
+        if (ownerTile != null) ownerTile.SetUnit(this);
+
+        // [MVP 조립] 배치될 때 HP바 생성
+        if (data != null && healthBarPrefab != null)
         {
-            ownerTile.SetUnit(this);
+            _healthModel = new HealthModel(data.maxHp * GameManager.Instance.skeletonHpMult);
+
+            _healthBarObject = Instantiate(healthBarPrefab);
+            HealthBarView view = _healthBarObject.GetComponent<HealthBarView>();
+            view.Initialize(this.transform);
+
+            _healthPresenter = new HealthPresenter(_healthModel, view);
         }
     }
 
@@ -58,7 +77,7 @@ public class UnitBase : MonoBehaviour
     {
         if (data != null)
         {
-            hp = data.maxHp;
+         
             GetComponent<SpriteRenderer>().sprite = data.unitSprite;
             gameObject.name = data.unitName;
         }

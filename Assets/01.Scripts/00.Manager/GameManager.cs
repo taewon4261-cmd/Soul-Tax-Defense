@@ -395,7 +395,7 @@ public class GameManager : MonoBehaviour
         GameObject unitObj = Instantiate(curUnitPrefab, tile.transform.position, Quaternion.identity);
         UnitBase unit = unitObj.GetComponent<UnitBase>();
 
-        if (unit != null) unit.Setup(tile);
+        if (unit != null) unit.SetUp(tile);
 
         curUnitPrefab = null; // 배치 후 선택 해제
     }
